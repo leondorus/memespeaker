@@ -1,13 +1,10 @@
-package promote
+package me.leondorus.promote
 
 import io.mockk.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import me.leondorus.data.*
-import me.leondorus.promote.Forwarder
-import me.leondorus.promote.MessageChecker
-import me.leondorus.promote.Promoter
 import me.leondorus.repos.MessageRepo
 import me.leondorus.repos.ReactRepo
 import kotlin.test.Test

@@ -1,9 +1,8 @@
-package checkers
+package me.leondorus.checkers
 
-import me.leondorus.checkers.ThreeReactChecker
 import me.leondorus.data.*
-import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.Test
 
 class ThreeReactCheckerTest {
     private val checker = ThreeReactChecker()

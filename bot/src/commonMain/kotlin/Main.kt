@@ -1,5 +1,3 @@
-package me.leondorus
-
 fun main() {
     val name = "Kotlin"
     println("Hello, " + name + "!")

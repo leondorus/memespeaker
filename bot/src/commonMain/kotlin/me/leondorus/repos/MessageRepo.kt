@@ -7,7 +7,7 @@ import me.leondorus.data.MessageId
 interface MessageRepo {
     suspend fun addMessage(message: Message)
 
-    // Performs transaction to promote message
+    // Performs transaction to me.leondorus.promote message
     // Returns true if it was the first time that this message got promoted
     // Returns false if it was already promoted
     suspend fun promoteMessage(messageId: MessageId): Boolean
