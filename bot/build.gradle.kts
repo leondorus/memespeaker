@@ -12,7 +12,9 @@ kotlin {
     jvmToolchain(21)
 
     sourceSets {
-        val commonMain by getting {
+        val jvmMain by getting
+
+        commonMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.androidx.room.runtime)
@@ -20,14 +22,14 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.io.mockk)
             }
         }
-        val jvmMain by getting {
+        jvmMain {
         }
     }
 }

@@ -37,8 +37,10 @@ class Promoter(
                 return@collect
 
             val nextTopic = topicMap[mess.topic]
-            if (nextTopic != null)
-                forwarder.forwardMessageToTopic(mid, nextTopic)
+            if (nextTopic != null) {
+                val newMess = forwarder.forwardMessageToTopic(mid, nextTopic)
+                messageRepo.addMessage(newMess)
+            }
         }
     }
 }

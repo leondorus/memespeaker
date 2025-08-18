@@ -1,6 +1,9 @@
 package me.leondorus.promote
 
-import io.mockk.*
+import io.mockk.Called
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -21,7 +24,7 @@ class PromoterTest {
     @Test
     fun `Promotes messages to correct topics when checker says true`() = runTest {
         val checker = TrueChecker()
-        val forwarder = mockk<Forwarder>(relaxed = true)
+        val forwarder = mockk<Forwarder>()
 
         val reacts = listOf(
             React("a", 5.mid, 0.uid),
@@ -35,6 +38,10 @@ class PromoterTest {
             Message(20.mid, TOPIC.ARCH, false),
             Message(127.mid, TOPIC.GENERAL, false),
         )
+        val newMessages = listOf(
+            Message(1005.mid, TOPIC.SOK, false),
+            Message(1006.mid, TOPIC.ARCH, false)
+        )
 
         val reactRepo = mockk<ReactRepo>()
         for (i in 0..<reacts.size) {
@@ -47,7 +54,13 @@ class PromoterTest {
             coEvery { messRepo.getMessage(messages[i].id) } returns flow { emit(messages[i]) }
             coEvery { messRepo.promoteMessage(messages[i].id) } returns true
         }
+        coEvery { messRepo.addMessage(newMessages[0]) } returns Unit
+        coEvery { messRepo.addMessage(newMessages[1]) } returns Unit
         coEvery { messRepo.getAllMessages() } returns flow { emit(messages) }
+
+        coEvery { forwarder.forwardMessageToTopic(5.mid, TOPIC.SOK) } returns newMessages[0]
+        coEvery { forwarder.forwardMessageToTopic(6.mid, TOPIC.ARCH) } returns newMessages[1]
+
 
         val promoter = Promoter(reactRepo, messRepo, checker, forwarder)
         promoter.startCollectingFlow()
@@ -62,12 +75,16 @@ class PromoterTest {
             messRepo.promoteMessage(20.mid)
             messRepo.promoteMessage(127.mid)
         }
+        coVerify {
+            messRepo.addMessage(newMessages[0])
+            messRepo.addMessage(newMessages[1])
+        }
     }
 
     @Test
     fun `Does nothing if checker says no`() = runTest {
         val checker = FalseChecker()
-        val forwarder = mockk<Forwarder>(relaxed = true)
+        val forwarder = mockk<Forwarder>()
 
         val reacts = listOf(
             React("a", 5.mid, 0.uid),
@@ -103,6 +120,9 @@ class PromoterTest {
         }
         coVerify(exactly = 0) {
             messRepo.promoteMessage(any())
+        }
+        coVerify(exactly = 0) {
+            messRepo.addMessage(any())
         }
     }
 
