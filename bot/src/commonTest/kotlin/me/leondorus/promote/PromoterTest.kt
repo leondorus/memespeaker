@@ -27,20 +27,20 @@ class PromoterTest {
         val forwarder = mockk<Forwarder>()
 
         val reacts = listOf(
-            React("a", 5.mid, 0.uid),
-            React("a", 6.mid, 0.uid),
-            React("a", 20.mid, 0.uid),
-            React("a", 127.mid, 0.uid),
+            React("a", 5L.mid, 0L.uid),
+            React("a", 6L.mid, 0L.uid),
+            React("a", 20L.mid, 0L.uid),
+            React("a", 127L.mid, 0L.uid),
         )
         val messages = listOf(
-            Message(5.mid, TOPIC.SPAM, false),
-            Message(6.mid, TOPIC.SOK, false),
-            Message(20.mid, TOPIC.ARCH, false),
-            Message(127.mid, TOPIC.GENERAL, false),
+            Message(5L.mid, TOPIC.SPAM, false),
+            Message(6L.mid, TOPIC.SOK, false),
+            Message(20L.mid, TOPIC.ARCH, false),
+            Message(127L.mid, TOPIC.GENERAL, false),
         )
         val newMessages = listOf(
-            Message(1005.mid, TOPIC.SOK, false),
-            Message(1006.mid, TOPIC.ARCH, false)
+            Message(1005L.mid, TOPIC.SOK, false),
+            Message(1006L.mid, TOPIC.ARCH, false)
         )
 
         val reactRepo = mockk<ReactRepo>()
@@ -58,22 +58,22 @@ class PromoterTest {
         coEvery { messRepo.addMessage(newMessages[1]) } returns Unit
         coEvery { messRepo.getAllMessages() } returns flow { emit(messages) }
 
-        coEvery { forwarder.forwardMessageToTopic(5.mid, TOPIC.SOK) } returns newMessages[0]
-        coEvery { forwarder.forwardMessageToTopic(6.mid, TOPIC.ARCH) } returns newMessages[1]
+        coEvery { forwarder.forwardMessageToTopic(5L.mid, TOPIC.SOK) } returns newMessages[0]
+        coEvery { forwarder.forwardMessageToTopic(6L.mid, TOPIC.ARCH) } returns newMessages[1]
 
 
         val promoter = Promoter(reactRepo, messRepo, checker, forwarder)
         promoter.startCollectingFlow()
 
         coVerify {
-            forwarder.forwardMessageToTopic(5.mid, TOPIC.SOK)
-            forwarder.forwardMessageToTopic(6.mid, TOPIC.ARCH)
+            forwarder.forwardMessageToTopic(5L.mid, TOPIC.SOK)
+            forwarder.forwardMessageToTopic(6L.mid, TOPIC.ARCH)
         }
         coVerify {
-            messRepo.promoteMessage(5.mid)
-            messRepo.promoteMessage(6.mid)
-            messRepo.promoteMessage(20.mid)
-            messRepo.promoteMessage(127.mid)
+            messRepo.promoteMessage(5L.mid)
+            messRepo.promoteMessage(6L.mid)
+            messRepo.promoteMessage(20L.mid)
+            messRepo.promoteMessage(127L.mid)
         }
         coVerify {
             messRepo.addMessage(newMessages[0])
@@ -87,16 +87,16 @@ class PromoterTest {
         val forwarder = mockk<Forwarder>()
 
         val reacts = listOf(
-            React("a", 5.mid, 0.uid),
-            React("a", 6.mid, 0.uid),
-            React("a", 20.mid, 0.uid),
-            React("a", 127.mid, 0.uid),
+            React("a", 5L.mid, 0L.uid),
+            React("a", 6L.mid, 0L.uid),
+            React("a", 20L.mid, 0L.uid),
+            React("a", 127L.mid, 0L.uid),
         )
         val messages = listOf(
-            Message(5.mid, TOPIC.SPAM, false),
-            Message(6.mid, TOPIC.SOK, true),
-            Message(20.mid, TOPIC.ARCH, false),
-            Message(127.mid, TOPIC.GENERAL, false),
+            Message(5L.mid, TOPIC.SPAM, false),
+            Message(6L.mid, TOPIC.SOK, true),
+            Message(20L.mid, TOPIC.ARCH, false),
+            Message(127L.mid, TOPIC.GENERAL, false),
         )
 
         val reactRepo = mockk<ReactRepo>()
@@ -131,12 +131,12 @@ class PromoterTest {
         val checker = TrueChecker()
         val forwarder = mockk<Forwarder>(relaxed = true)
 
-        val react = React("a", 5.mid, 0.uid)
+        val react = React("a", 5L.mid, 0L.uid)
         val reactRepo = mockk<ReactRepo>()
         coEvery { reactRepo.getReactsForMessage(react.messageId) } returns flowOf(listOf(react))
         coEvery { reactRepo.getReactsAddUpdates() } returns flowOf(react)
 
-        val message = Message(5.mid, TOPIC.SPAM, false)
+        val message = Message(5L.mid, TOPIC.SPAM, false)
         val messRepo = mockk<MessageRepo>()
         coEvery { messRepo.getMessage(message.id) } returns flowOf(message)
         coEvery { messRepo.promoteMessage(message.id) } returns false

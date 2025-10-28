@@ -15,5 +15,5 @@ interface ReactDao {
     suspend fun delete(react: RoomReact)
 
     @Query("SELECT * FROM reacts WHERE messageId = :mid")
-    fun getByMessageId(mid: Int): Flow<List<RoomReact>>
+    fun getByMessageId(mid: Long): Flow<List<RoomReact>>
 }

@@ -1,11 +1,6 @@
 package me.leondorus.room.message
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 
@@ -18,7 +13,7 @@ interface MessageDao {
     suspend fun update(message: RoomMessage)
 
     @Transaction
-    suspend fun promote(id: Int): Boolean {
+    suspend fun promote(id: Long): Boolean {
         val mess = findById(id).first() ?: return false
         if (mess.wasPromoted)
             return false
@@ -31,5 +26,5 @@ interface MessageDao {
     fun getAll(): Flow<List<RoomMessage>>
 
     @Query("SELECT * FROM messages WHERE id = :id LIMIT 1")
-    fun findById(id: Int): Flow<RoomMessage?>
+    fun findById(id: Long): Flow<RoomMessage?>
 }

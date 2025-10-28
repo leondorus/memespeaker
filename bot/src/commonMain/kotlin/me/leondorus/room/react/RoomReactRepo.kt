@@ -11,8 +11,8 @@ class RoomReactRepo(private val dao: ReactDao) : ReactRepo {
     private val reactFlow = MutableSharedFlow<React>()
 
     override suspend fun addReact(react: React) {
-        val success = (dao.insert(react.toRoomReact()) == 1L)
-        if (success)
+        val res = dao.insert(react.toRoomReact())
+        if (res >= 0L)
             reactFlow.emit(react)
     }
 

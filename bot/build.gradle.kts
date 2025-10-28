@@ -1,7 +1,8 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "me.leondorus"
@@ -14,20 +15,23 @@ kotlin {
     sourceSets {
         val jvmMain by getting
 
-        commonMain {
-            dependencies {
-                implementation(libs.kotlinx.coroutines)
-                implementation(libs.androidx.room.runtime)
-                implementation(libs.androidx.sqlite.bundled)
-            }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.kotlinx.serialization.json)
+
+            implementation(libs.tgbotapi)
         }
 
-        commonTest {
-            dependencies {
-                implementation(libs.kotlin.test)
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.io.mockk)
-            }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.io.mockk)
         }
         jvmMain {
         }

@@ -7,11 +7,11 @@ import androidx.room.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import me.leondorus.room.message.MessageDao
-import me.leondorus.room.react.ReactDao
 import me.leondorus.room.message.RoomMessage
+import me.leondorus.room.react.ReactDao
 import me.leondorus.room.react.RoomReact
 
-@Database(entities = [RoomMessage::class, RoomReact::class], version = 1)
+@Database(entities = [RoomMessage::class, RoomReact::class], version = 2)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao

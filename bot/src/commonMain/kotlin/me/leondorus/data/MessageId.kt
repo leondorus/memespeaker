@@ -1,7 +1,7 @@
 package me.leondorus.data
 
 @JvmInline
-value class MessageId(val id: Int)
+value class MessageId(val id: Long)
 
-val Int.mid: MessageId
+val Long.mid: MessageId
     get() = MessageId(this)

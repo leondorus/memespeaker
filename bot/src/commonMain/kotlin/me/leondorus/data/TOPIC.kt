@@ -1,15 +1,18 @@
 package me.leondorus.data
 
-enum class TOPIC(val id: Int?) {
+enum class TOPIC(val id: Long?) {
     GENERAL(null),
     SPAM(6),
     SOK(4),
     ARCH(3),
 }
 
-val INT_TO_TOPIC = mapOf(
+private val INT_TO_TOPIC = mapOf(
     null to TOPIC.GENERAL,
-    6 to TOPIC.SPAM,
-    4 to TOPIC.SOK,
-    3 to TOPIC.ARCH,
+    6L to TOPIC.SPAM,
+    4L to TOPIC.SOK,
+    3L to TOPIC.ARCH,
 )
+
+val (Long?).tpc: TOPIC?
+    get() = INT_TO_TOPIC[this]
