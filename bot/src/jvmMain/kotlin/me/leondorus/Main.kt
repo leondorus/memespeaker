@@ -1,3 +1,5 @@
+package me.leondorus
+
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import me.leondorus.checkers.ThreeReactChecker
@@ -13,8 +15,7 @@ import me.leondorus.tgbot.ktortg.KtorBot
 import me.leondorus.tgbot.ktortg.UpdateRepo
 
 fun main(): Unit = runBlocking {
-//    val token = System.getenv("BOT_TOKEN")
-    val token = "7965726034:AAE9mQKm-ic_quvNv_h2rO4ePVIUBDT3lxs"
+    val token = System.getenv("BOT_TOKEN")
     val bot = KtorBot(token, this)
 
     val database = getDatabaseBuilder().getRoomDatabase()
