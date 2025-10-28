@@ -24,8 +24,11 @@ class Promoter(
             val reactsFlow = reactRepo.getReactsForMessage(mid)
 
             val (mess, reacts) = combine(messFlow, reactsFlow) { mess, reacts ->
-                (mess!! to reacts)
+                (mess to reacts)
             }.first()
+            if (mess == null)
+                // Message is probably older than we have at db, ignore
+                return@collect
             assert(mid == mess.id)
 
             val shouldPromote = checker.checkMessage(mess, reacts)
