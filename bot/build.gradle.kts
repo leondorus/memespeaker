@@ -13,8 +13,6 @@ kotlin {
     jvmToolchain(21)
 
     sourceSets {
-        val jvmMain by getting
-
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines)
 
@@ -24,8 +22,6 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.tgbotapi)
         }
 
         commonTest.dependencies {

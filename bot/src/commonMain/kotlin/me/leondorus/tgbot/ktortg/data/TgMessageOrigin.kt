@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package me.leondorus.tgbot.ktortg.data
 
 import kotlinx.serialization.SerialName

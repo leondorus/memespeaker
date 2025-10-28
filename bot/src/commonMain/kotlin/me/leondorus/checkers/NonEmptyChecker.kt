@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package me.leondorus.checkers
 
 import me.leondorus.data.Message
