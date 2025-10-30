@@ -16,18 +16,18 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import me.leondorus.memespeaker.tgbot.ktortg.data.TgMessage
 import me.leondorus.memespeaker.tgbot.ktortg.data.TgUpdate
-import kotlin.math.max
+import me.leondorus.memespeaker.tgbot.ktortg.room.Counter
+import me.leondorus.memespeaker.tgbot.ktortg.room.CounterDao
 
 private const val telegramUrl = "https://api.telegram.org/bot"
 private const val longPollingTimeout = 6L
 
-class KtorBot(private val token: String, private val scope: CoroutineScope) {
+class KtorBot(private val token: String, private val scope: CoroutineScope, private val counterDao: CounterDao) {
     private val client = HttpClient(CIO)
     private val json = Json { ignoreUnknownKeys = true }
 
     private val updateFlow: MutableSharedFlow<TgUpdate> = MutableSharedFlow()
     private var updateJob: Job? = null
-    private var maxSeenUpdateId = 175144188
 
     suspend fun forwardMessage(
         chatId: Long,
@@ -75,7 +75,7 @@ class KtorBot(private val token: String, private val scope: CoroutineScope) {
     suspend fun getCurrentUpdates(): List<TgUpdate> {
         val requestUrl = getRequestUrl(
             "getUpdates", mapOf(
-                "offset" to (maxSeenUpdateId + 1).toString(),
+                "offset" to (getMaxSeenUpdateId() + 1).toString(),
                 "timeout" to longPollingTimeout.toString(),
                 "allowed_updates" to """["message","message_reaction"]"""
             )
@@ -83,8 +83,8 @@ class KtorBot(private val token: String, private val scope: CoroutineScope) {
 
         val updateJson = performRequestAndReturnJson(requestUrl)
         val updates = json.decodeFromJsonElement<List<TgUpdate>>(updateJson)
-        val maxCurUpdateId = updates.maxByOrNull { u -> u.update_id }?.update_id ?: Int.MIN_VALUE
-        maxSeenUpdateId = max(maxSeenUpdateId, maxCurUpdateId)
+        val receivedUpdateId = updates.maxByOrNull { u -> u.update_id }?.update_id ?: Int.MIN_VALUE
+        updateMaxSeenUpdateId(receivedUpdateId)
 
         return updates
     }
@@ -108,4 +108,9 @@ class KtorBot(private val token: String, private val scope: CoroutineScope) {
         val res = "$telegramUrl$token/$requestName?$argsStr"
         return res
     }
+
+
+    private val counterId = token.substring(0, 8)
+    private suspend fun getMaxSeenUpdateId(): Int = counterDao.getCounter(counterId)?.value ?: 0
+    private suspend fun updateMaxSeenUpdateId(newCounter: Int) = counterDao.maxCounter(Counter(counterId, newCounter))
 }

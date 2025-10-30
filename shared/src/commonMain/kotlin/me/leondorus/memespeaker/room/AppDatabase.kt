@@ -10,12 +10,15 @@ import me.leondorus.memespeaker.room.message.MessageDao
 import me.leondorus.memespeaker.room.message.RoomMessage
 import me.leondorus.memespeaker.room.react.ReactDao
 import me.leondorus.memespeaker.room.react.RoomReact
+import me.leondorus.memespeaker.tgbot.ktortg.room.Counter
+import me.leondorus.memespeaker.tgbot.ktortg.room.CounterDao
 
-@Database(entities = [RoomMessage::class, RoomReact::class], version = 2)
+@Database(entities = [RoomMessage::class, RoomReact::class, Counter::class], version = 3)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao
     abstract fun reactDao(): ReactDao
+    abstract fun counterDao(): CounterDao
 }
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")

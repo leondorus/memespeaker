@@ -16,13 +16,14 @@ import me.leondorus.memespeaker.tgbot.ktortg.UpdateRepo
 
 fun main(): Unit = runBlocking {
     val token = System.getenv("BOT_TOKEN")
-    val bot = KtorBot(token, this)
 
     val database = getDatabaseBuilder().getRoomDatabase()
     val messRepo = RoomMessageRepo(database.messageDao())
     val reactRepo = RoomReactRepo(database.reactDao())
 
+    val bot = KtorBot(token, this, database.counterDao())
     val updateRepo = UpdateRepo(MEMES_CHAT_ID, bot, this)
+
     val reactSaver = ReactSaver(updateRepo, reactRepo)
     val messageRepo = MessageSaver(updateRepo, messRepo)
 
