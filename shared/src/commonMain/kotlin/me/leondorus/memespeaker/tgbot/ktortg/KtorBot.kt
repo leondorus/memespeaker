@@ -3,6 +3,7 @@ package me.leondorus.memespeaker.tgbot.ktortg
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.CoroutineScope
@@ -81,7 +82,13 @@ class KtorBot(private val token: String, private val scope: CoroutineScope, priv
             )
         )
 
-        val updateJson = performRequestAndReturnJson(requestUrl)
+        val updateJson: JsonElement
+        try {
+            updateJson = performRequestAndReturnJson(requestUrl)
+        } catch (e: HttpRequestTimeoutException) {
+            // TODO: Log it
+            return listOf()
+        }
         val updates = json.decodeFromJsonElement<List<TgUpdate>>(updateJson)
         val receivedUpdateId = updates.maxByOrNull { u -> u.update_id }?.update_id ?: Int.MIN_VALUE
         updateMaxSeenUpdateId(receivedUpdateId)
