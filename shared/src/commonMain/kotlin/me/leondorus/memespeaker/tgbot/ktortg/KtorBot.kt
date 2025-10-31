@@ -11,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -85,7 +86,7 @@ class KtorBot(private val token: String, private val scope: CoroutineScope, priv
         val updateJson: JsonElement
         try {
             updateJson = performRequestAndReturnJson(requestUrl)
-        } catch (e: HttpRequestTimeoutException) {
+        } catch (e: IOException) {
             // TODO: Log it
             return listOf()
         }
